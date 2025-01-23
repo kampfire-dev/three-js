@@ -1,13 +1,16 @@
-import { OrbitControls, Text } from "@react-three/drei";
+import { OrbitControls, Text, Stats } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
-import { useState } from "react";
-import "./App.css";
+import { useRef, useState } from "react";
 import { PostEffects } from "./components/post-effects";
 import { Campfire } from "./components/campfire";
+import {
+  EffectComposer,
+  Outline,
+  Select,
+  Selection,
+} from "@react-three/postprocessing";
 
 function App() {
-  const [count, setCount] = useState(0);
-
   return (
     <>
       <Canvas shadows camera={{ position: [0, 0, 10], fov: 45 }}>
@@ -18,11 +21,9 @@ function App() {
           <meshStandardMaterial
             color="#eeffee"
             emissive="#ddffdd"
-            emissiveIntensity={0.5}
+            emissiveIntensity={0.9}
           />
         </Text>
-        <ambientLight />
-        <pointLight position={[10, 10, 10]} />
         {/* <mesh
           onClick={() => setCount((count) => count + 1)}
           onPointerOver={() => console.log("hovered")}
@@ -32,11 +33,18 @@ function App() {
           <boxGeometry args={[1, 1, 1]} />
           <meshStandardMaterial color={count > 5 ? "hotpink" : "orange"} />
         </mesh> */}
+        {/* <Selection>
+          <Select enabled> */}
         <Campfire position={[0, -1, 0]} />
+        {/* </Select> */}
         <PostEffects />
+        {/* </Selection> */}
+        <Stats />
       </Canvas>
-      <div className="absolute bottom-0 left-0 right-0 text-center">
-        <p>Campfire by Poly by Google [CC-BY] via Poly Pizza</p>
+      <div className="absolute bottom-0 left-0 right-0 m-1">
+        <p className="text-sm text-gray-300">
+          Campfire by Poly by Google [CC-BY] via Poly Pizza
+        </p>
       </div>
     </>
   );

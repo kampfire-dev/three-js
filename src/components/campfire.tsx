@@ -6,6 +6,7 @@ Command: npx gltfjsx@6.5.3 ../../public/models/Campfire 3D Model.glb -t -o campf
 import * as THREE from "three";
 import { useGLTF } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
+import React from "react";
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -16,21 +17,23 @@ type GLTFResult = GLTF & {
   };
 };
 
-export function Campfire(props: JSX.IntrinsicElements["group"]) {
-  const { nodes, materials } = useGLTF(
-    "/models/Campfire 3D Model.glb"
-  ) as GLTFResult;
-  return (
-    <group {...props} dispose={null}>
-      <mesh
-        name="campfire"
-        geometry={nodes.campfire.geometry}
-        material={materials.None}
-        castShadow
-        receiveShadow
-      />
-    </group>
-  );
-}
+const Campfire = React.forwardRef<THREE.Mesh, JSX.IntrinsicElements["group"]>(
+  ({ ...props }, ref) => {
+    const { nodes, materials } = useGLTF(
+      "/models/Campfire 3D Model.glb"
+    ) as GLTFResult;
+    return (
+      <group {...props} dispose={null} layers={10}>
+        <mesh
+          name="campfire"
+          geometry={nodes.campfire.geometry}
+          material={materials.None}
+          ref={ref}
+        />
+      </group>
+    );
+  }
+);
+Campfire.displayName = "Campfire";
 
-useGLTF.preload("/Campfire 3D Model.glb");
+export { Campfire };

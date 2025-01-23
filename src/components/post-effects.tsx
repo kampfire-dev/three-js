@@ -1,36 +1,39 @@
 import {
   Bloom,
   ChromaticAberration,
-  DepthOfField,
   EffectComposer,
   Noise,
+  Outline,
   Scanline,
   Vignette,
 } from "@react-three/postprocessing";
-import { BlendFunction } from "postprocessing";
+import { BlendFunction, VignetteTechnique } from "postprocessing";
 import { Vector2 } from "three";
+import { LensDistortion } from "./lens-distortion";
 
 export function PostEffects() {
   return (
     <EffectComposer>
-      {/* <DepthOfField
-        focusDistance={3}
-        focalLength={0.02}
-        bokehScale={2}
-        height={480}
-      /> */}
-      <Bloom luminanceThreshold={0.1} luminanceSmoothing={1} height={300} />
+      <Bloom luminanceThreshold={0.1} luminanceSmoothing={0.5} height={300} />
       <ChromaticAberration
         offset={new Vector2(0.002, 0.0002)}
-        radialModulation={false}
-        modulationOffset={0.0005}
+        radialModulation={true}
+        modulationOffset={0.5}
       />
       <Noise opacity={0.09} />
-      <Scanline
-        blendFunction={BlendFunction.OVERLAY} // blend mode
-        density={0.9} // scanline density
+      <Scanline scrollSpeed={0.001} density={0.9} />
+      <Vignette
+        technique={VignetteTechnique.ESKIL}
+        offset={1}
+        darkness={1.1}
+        blendFunction={BlendFunction.NORMAL}
       />
-      <Vignette eskil={false} offset={0.01} darkness={0.9} />
+      <LensDistortion
+        distortion={new Vector2(0.1, 0.1)}
+        principalPoint={new Vector2(0, 0)}
+        focalLength={new Vector2(0.75, 0.75)}
+        skew={0}
+      />
     </EffectComposer>
   );
 }
