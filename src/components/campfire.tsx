@@ -22,13 +22,15 @@ const Campfire = React.forwardRef<THREE.Mesh, JSX.IntrinsicElements["group"]>(
     const { nodes, materials } = useGLTF(
       "/models/Campfire 3D Model.glb"
     ) as GLTFResult;
+
     return (
-      <group {...props} dispose={null} layers={10}>
+      <group {...props} dispose={null}>
         <mesh
           name="campfire"
           geometry={nodes.campfire.geometry}
-          material={materials.None}
           ref={ref}
+          material={materials.None}
+          layers={0}
         />
       </group>
     );
