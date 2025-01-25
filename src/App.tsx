@@ -21,13 +21,14 @@ import * as THREE from "three";
 import { SobelEdge } from "./components/sobel-effect";
 import { RenderPortal } from "./components/render-portal";
 import { CustomComposer } from "./components/custom-composer";
+import { TestScene } from "./components/scene";
 
 function App() {
   const renderMesh = useRef<THREE.Mesh | null>(null);
   return (
     <>
       <Canvas shadows camera={{ position: [0, 0, 10], fov: 45 }}>
-        <color attach="background" args={["#242424"]} />
+        {/* <color attach="background" args={["#242424"]} />
         <OrbitControls />
         <ambientLight intensity={0.5} />
         <Text font={"/fonts/JetBrainsMono-Regular.ttf"} position={[0, 2, 0]}>
@@ -46,12 +47,13 @@ function App() {
             <Campfire position={[0, -1, 0]} />
             <CustomComposer />
           </MeshPortalMaterial>
-        </mesh>
+        </mesh> */}
         {/* <CustomComposer layers={1} /> */}
         {/* <mesh ref={renderMesh} material={new THREE.MeshBasicMaterial()}>
           <planeGeometry args={[4, 4]} />
         </mesh> */}
-        <PostEffects />
+        {/* <PostEffects /> */}
+        <TestScene />
         <Stats />
       </Canvas>
       <div className="absolute bottom-0 left-0 right-0 m-1">

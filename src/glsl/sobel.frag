@@ -1,5 +1,3 @@
-// uniform sampler2D inputBuffer; // Input texture
-
 void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor) {
     float kernel[9];
     vec2 offset[9];
