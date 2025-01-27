@@ -18,10 +18,12 @@ const blendShaderMaterial = new ShaderMaterial({
     uniform sampler2D tTexture1;
     uniform sampler2D tTexture2;
     uniform int blendMode; // Use this to set different blend modes
+    uniform vec2 winResolution;
 
     void main() {
-      vec4 color1 = texture2D(tTexture1, vUv);
-      vec4 color2 = texture2D(tTexture2, vUv);
+      vec2 uv = gl_FragCoord.xy / winResolution.xy;
+      vec4 color1 = texture2D(tTexture1, uv);
+      vec4 color2 = texture2D(tTexture2, uv);
       vec4 blendedColor;
 
       // Add blend mode

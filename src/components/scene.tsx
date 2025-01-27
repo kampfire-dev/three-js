@@ -51,25 +51,29 @@ export function TestScene() {
   const fullscreenTriangleRef = useRef<Mesh | null>(null);
   const screenCameraRef = useRef<THREE.OrthographicCamera | null>(null);
 
-  // const composer = useMemo(() => {
-  //   const composer = new EffectComposer(gl);
-  //   if (!camera) return composer;
-  //   composer.autoRenderToScreen = false;
-  //   composer.addPass(new RenderPass(portalScene, camera));
-  //   composer.addPass(new EffectPass(camera, new SobelEdgeEffect()));
-  //   composer.addPass(new CopyPass(renderTarget));
-  //   return composer;
-  // }, [gl, camera, portalScene, renderTarget]);
+  const { gl, camera } = useThree();
+
+  const composer = useMemo(() => {
+    const composer = new EffectComposer(gl);
+
+    composer.autoRenderToScreen = false;
+    composer.addPass(new RenderPass(blueScene, camera));
+    composer.addPass(new EffectPass(camera, new SobelEdgeEffect()));
+    composer.addPass(new CopyPass(renderTargetBlue));
+
+    return composer;
+  }, [gl, camera, blueScene, renderTargetBlue]);
 
   useFrame(({ gl, scene, camera }, delta) => {
     const previousAutoClear = gl.autoClear;
     gl.autoClear = true;
 
+    // Render the red scene
     gl.setRenderTarget(renderTargetRed);
     gl.render(redScene, camera);
 
-    gl.setRenderTarget(renderTargetBlue);
-    gl.render(blueScene, camera);
+    // Render the blue scene
+    composer.render();
 
     gl.autoClear = previousAutoClear;
 
@@ -100,7 +104,7 @@ export function TestScene() {
 
       <mesh frustumCulled={false}>
         <planeGeometry args={[6, 6]} />
-        <shaderMaterial
+        {/* <shaderMaterial
           transparent
           key={uuidv4()}
           vertexShader={vertexShader}
@@ -114,26 +118,26 @@ export function TestScene() {
               ).multiplyScalar(Math.min(window.devicePixelRatio, 2)),
             },
           }}
-        />
-        {/* <shaderMaterial
+        /> */}
+        <shaderMaterial
           key={uuidv4()}
           vertexShader={blendShaderMaterial.vertexShader}
           fragmentShader={blendShaderMaterial.fragmentShader}
           uniforms={{
             tTexture1: { value: renderTargetRed.texture },
             tTexture2: { value: renderTargetBlue.texture },
+            blendMode: { value: 0 },
             winResolution: {
               value: new THREE.Vector2(
                 window.innerWidth,
                 window.innerHeight
               ).multiplyScalar(Math.min(window.devicePixelRatio, 2)),
             },
-            blendMode: { value: 2 },
           }}
-        /> */}
+        />
       </mesh>
-      <mesh frustumCulled={false}>
-        <planeGeometry args={[6, 6]} />
+      {/* <mesh frustumCulled={false}>
+        <planeGeometry args={[4, 4]} />
         <shaderMaterial
           transparent
           key={uuidv4()}
@@ -149,7 +153,7 @@ export function TestScene() {
             },
           }}
         />
-      </mesh>
+      </mesh> */}
       {/* {createPortal(<PortalScene />, portalScene)}
       <mesh frustumCulled={false} geometry={getFullscreenTriangle()}>
         <meshBasicMaterial
@@ -181,11 +185,19 @@ export function TestScene() {
 }
 
 function PortalSceneBlue() {
+  const objectRef = useRef<Mesh | null>(null);
+  useFrame((_, delta) => {
+    if (!objectRef.current) return;
+
+    // rotate the object
+    objectRef.current.rotation.y += 1 * delta;
+  });
+
   return (
     <>
       <ambientLight intensity={0.5} />
       <directionalLight position={[10, 10, 0]} />
-      <Dodecahedron position={[0, -2, 0]}>
+      <Dodecahedron ref={objectRef} position={[0, -2, 0]}>
         <meshStandardMaterial color="blue" />
       </Dodecahedron>
     </>
