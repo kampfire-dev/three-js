@@ -1,21 +1,26 @@
-import { Effect, EffectComposer, EffectPass, RenderPass } from "postprocessing";
-import { useContext, useEffect, useRef } from "react";
+import { Effect } from "postprocessing";
 import { forwardRef, useMemo } from "react";
-import { Camera, Layers, Texture, Uniform, WebGLRenderTarget } from "three";
+import { Color, Texture, Uniform, WebGLRenderTarget } from "three";
 import fragmentShader from "../glsl/sobel.frag?raw";
-import { extend, useThree } from "@react-three/fiber";
-import { EffectComposerContext } from "@react-three/postprocessing";
 
 // Effect implementation
 export class SobelEdgeEffect extends Effect {
-  _uParam: number;
+  _uEdgeColor: Color;
 
-  constructor({ param = 0.1 } = {}) {
+  constructor({
+    edgeColor = new Color(1, 1, 1),
+    emissiveColor = new Color(0, 0, 0),
+    emissiveIntensity = 0.9,
+  } = {}) {
     super("SobelEdgeEffect", fragmentShader, {
-      uniforms: new Map([["param", new Uniform(param)]]),
+      uniforms: new Map([
+        ["edgeColor", new Uniform(edgeColor)],
+        ["emissiveColor", new Uniform(emissiveColor)],
+        ["emissiveIntensity", new Uniform(emissiveIntensity)],
+      ]),
     });
 
-    this._uParam = param;
+    this._uEdgeColor = edgeColor;
   }
 
   update(

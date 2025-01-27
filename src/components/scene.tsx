@@ -60,7 +60,16 @@ export function TestScene() {
 
     composer.autoRenderToScreen = false;
     composer.addPass(new RenderPass(blueScene, camera));
-    composer.addPass(new EffectPass(camera, new SobelEdgeEffect()));
+    composer.addPass(
+      new EffectPass(
+        camera,
+        new SobelEdgeEffect({
+          edgeColor: new THREE.Color(1, 0, 0),
+          emissiveColor: new THREE.Color(1, 1, 1),
+          emissiveIntensity: 0.9,
+        })
+      )
+    );
     composer.addPass(new CopyPass(renderTargetBlue));
 
     return composer;
@@ -75,7 +84,7 @@ export function TestScene() {
     gl.render(redScene, camera);
 
     // Render the blue scene
-    composer.render();
+    composer.render(delta);
 
     gl.autoClear = previousAutoClear;
 
@@ -86,8 +95,6 @@ export function TestScene() {
   return (
     <>
       <OrbitControls />
-      <ambientLight intensity={0.5} />
-      <directionalLight position={[10, 10, 10]} layers={0} />
       {/* <mesh>
         <boxGeometry args={[4, 4, 4]} />
         <MeshPortalMaterial ref={portalMaterial}>
@@ -189,6 +196,31 @@ export function TestScene() {
 
 function PortalSceneBlue() {
   const objectRef = useRef<Mesh | null>(null);
+  const objectRef2 = useRef<Mesh | null>(null);
+
+  useFrame((_, delta) => {
+    if (!objectRef.current || !objectRef2.current) return;
+
+    // rotate the object
+    objectRef.current.rotation.y += 1 * delta;
+    objectRef2.current.rotation.y += 1 * delta;
+  });
+
+  return (
+    <>
+      <directionalLight position={[10, 10, 10]} />
+      <directionalLight position={[-10, -10, -10]} />
+      <Campfire ref={objectRef} position={[0, -2, 0]} />
+      <mesh ref={objectRef2} position={[2, 0, 0]}>
+        <boxGeometry args={[1, 1, 1]} />
+        <meshStandardMaterial color="red" />
+      </mesh>
+    </>
+  );
+}
+
+function PortalSceneRed() {
+  const objectRef = useRef<Mesh | null>(null);
   useFrame((_, delta) => {
     if (!objectRef.current) return;
 
@@ -198,25 +230,20 @@ function PortalSceneBlue() {
 
   return (
     <>
-      <directionalLight position={[4, 5, 0]} intensity={2} />
-      <Campfire ref={objectRef} position={[0, -2, 0]} />
-    </>
-  );
-}
-
-function PortalSceneRed() {
-  return (
-    <>
-      <ambientLight intensity={0.5} />
-      <directionalLight position={[10, 10, 0]} />
+      <directionalLight position={[10, 10, 10]} />
+      <directionalLight position={[-10, -10, -10]} />
       <Text font={"/fonts/JetBrainsMono-Regular.ttf"} position={[0, 2, 0]}>
         kampfire.dev
         <meshStandardMaterial
           color="#eeffee"
           emissive="#ddffdd"
-          emissiveIntensity={0.9}
+          emissiveIntensity={0.75}
         />
       </Text>
+      <mesh ref={objectRef} position={[-2, 0, 0]}>
+        <boxGeometry args={[1, 1, 1]} />
+        <meshStandardMaterial color="red" />
+      </mesh>
     </>
   );
 }
