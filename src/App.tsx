@@ -27,7 +27,7 @@ function App() {
   const renderMesh = useRef<THREE.Mesh | null>(null);
   return (
     <>
-      <Canvas shadows camera={{ position: [0, 0, 10], fov: 45 }}>
+      <Canvas shadows camera={{ position: [0, 0, 6] }} dpr={[1, 2]}>
         {/* <color attach="background" args={["#242424"]} />
         <OrbitControls />
         <ambientLight intensity={0.5} />

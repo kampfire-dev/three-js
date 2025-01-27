@@ -14,4 +14,4 @@ const getFullscreenTriangle = () => {
   return geometry;
 };
 
-export default getFullscreenTriangle;
+export { getFullscreenTriangle };
