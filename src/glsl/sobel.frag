@@ -33,5 +33,8 @@ void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor)
     float edge = length(Gx + Gy);
 
     // Output the Sobel-filtered edge as grayscale
-    outputColor = vec4(vec3(edge), inputColor.a);
+    vec4 edgeColor = vec4(vec3(edge), inputColor.a);
+
+    // make the edges blue
+    outputColor = edgeColor * vec4(0.0, 0.0, 1.0, 1.0);
 }

@@ -7,6 +7,7 @@ import {
   PerspectiveCamera,
   PortalMaterialType,
   RenderTexture,
+  Text,
   useFBO,
 } from "@react-three/drei";
 import {
@@ -35,6 +36,7 @@ import {
   vertexShader,
 } from "./shader-materials/ScreenSpaceShader";
 import { blendShaderMaterial } from "./shader-materials/BlendShader";
+import { Campfire } from "./campfire";
 
 export function TestScene() {
   const renderTargetRed = useFBO();
@@ -64,7 +66,7 @@ export function TestScene() {
     return composer;
   }, [gl, camera, blueScene, renderTargetBlue]);
 
-  useFrame(({ gl, scene, camera }, delta) => {
+  useFrame(({ gl }, delta) => {
     const previousAutoClear = gl.autoClear;
     gl.autoClear = true;
 
@@ -121,6 +123,7 @@ export function TestScene() {
         /> */}
         <shaderMaterial
           key={uuidv4()}
+          transparent
           vertexShader={blendShaderMaterial.vertexShader}
           fragmentShader={blendShaderMaterial.fragmentShader}
           uniforms={{
@@ -195,11 +198,8 @@ function PortalSceneBlue() {
 
   return (
     <>
-      <ambientLight intensity={0.5} />
-      <directionalLight position={[10, 10, 0]} />
-      <Dodecahedron ref={objectRef} position={[0, -2, 0]}>
-        <meshStandardMaterial color="blue" />
-      </Dodecahedron>
+      <directionalLight position={[4, 5, 0]} intensity={2} />
+      <Campfire ref={objectRef} position={[0, -2, 0]} />
     </>
   );
 }
@@ -209,9 +209,14 @@ function PortalSceneRed() {
     <>
       <ambientLight intensity={0.5} />
       <directionalLight position={[10, 10, 0]} />
-      <Dodecahedron position={[0, 2, 0]}>
-        <meshStandardMaterial color="red" />
-      </Dodecahedron>
+      <Text font={"/fonts/JetBrainsMono-Regular.ttf"} position={[0, 2, 0]}>
+        kampfire.dev
+        <meshStandardMaterial
+          color="#eeffee"
+          emissive="#ddffdd"
+          emissiveIntensity={0.9}
+        />
+      </Text>
     </>
   );
 }

@@ -28,8 +28,8 @@ function App() {
   return (
     <>
       <Canvas shadows camera={{ position: [0, 0, 6] }} dpr={[1, 2]}>
-        {/* <color attach="background" args={["#242424"]} />
-        <OrbitControls />
+        <color attach="background" args={["#242424"]} />
+        {/* <OrbitControls />
         <ambientLight intensity={0.5} />
         <Text font={"/fonts/JetBrainsMono-Regular.ttf"} position={[0, 2, 0]}>
           kampfire.dev
@@ -52,8 +52,8 @@ function App() {
         {/* <mesh ref={renderMesh} material={new THREE.MeshBasicMaterial()}>
           <planeGeometry args={[4, 4]} />
         </mesh> */}
-        {/* <PostEffects /> */}
         <TestScene />
+        <PostEffects />
         <Stats />
       </Canvas>
       <div className="absolute bottom-0 left-0 right-0 m-1">

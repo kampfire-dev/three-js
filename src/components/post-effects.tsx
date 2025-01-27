@@ -15,9 +15,6 @@ import { RenderPass } from "./render-pass";
 export function PostEffects() {
   return (
     <EffectComposer>
-      {/* <RenderPass layers={1} /> */}
-      {/* <SobelEdge layers={1} /> */}
-      {/* <RenderPass /> */}
       <Bloom luminanceThreshold={0.1} luminanceSmoothing={0.9} height={300} />
       <ChromaticAberration
         offset={new Vector2(0.005, 0.0005)}
