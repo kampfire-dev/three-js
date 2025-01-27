@@ -40,6 +40,8 @@ const blendShaderMaterial = new ShaderMaterial({
       }
 
       gl_FragColor = blendedColor;
+      #include <tonemapping_fragment>
+      #include <colorspace_fragment>
     }
   `,
 });

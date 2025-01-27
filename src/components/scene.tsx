@@ -61,16 +61,15 @@ export function TestScene() {
   //   return composer;
   // }, [gl, camera, portalScene, renderTarget]);
 
-  useFrame(({ gl, scene }, delta) => {
-    if (!cameraRef.current) return;
+  useFrame(({ gl, scene, camera }, delta) => {
     const previousAutoClear = gl.autoClear;
     gl.autoClear = true;
 
     gl.setRenderTarget(renderTargetRed);
-    gl.render(redScene, cameraRef.current);
+    gl.render(redScene, camera);
 
     gl.setRenderTarget(renderTargetBlue);
-    gl.render(blueScene, cameraRef.current);
+    gl.render(blueScene, camera);
 
     gl.autoClear = previousAutoClear;
 
@@ -80,7 +79,6 @@ export function TestScene() {
 
   return (
     <>
-      <PerspectiveCamera ref={cameraRef} makeDefault position={[0, 0, 6]} />
       <OrbitControls />
       <ambientLight intensity={0.5} />
       <directionalLight position={[10, 10, 10]} layers={0} />
@@ -100,9 +98,10 @@ export function TestScene() {
       {createPortal(<PortalSceneRed />, redScene)}
       {createPortal(<PortalSceneBlue />, blueScene)}
 
-      <mesh frustumCulled={false} position={[0, 0, 0]}>
+      <mesh frustumCulled={false}>
         <planeGeometry args={[6, 6]} />
         <shaderMaterial
+          transparent
           key={uuidv4()}
           vertexShader={vertexShader}
           fragmentShader={fragmentShader}
@@ -116,15 +115,41 @@ export function TestScene() {
             },
           }}
         />
+        {/* <shaderMaterial
+          key={uuidv4()}
+          vertexShader={blendShaderMaterial.vertexShader}
+          fragmentShader={blendShaderMaterial.fragmentShader}
+          uniforms={{
+            tTexture1: { value: renderTargetRed.texture },
+            tTexture2: { value: renderTargetBlue.texture },
+            winResolution: {
+              value: new THREE.Vector2(
+                window.innerWidth,
+                window.innerHeight
+              ).multiplyScalar(Math.min(window.devicePixelRatio, 2)),
+            },
+            blendMode: { value: 2 },
+          }}
+        /> */}
       </mesh>
-      {/* <mesh frustumCulled={false} position={[0, 0, 0]}>
+      <mesh frustumCulled={false}>
         <planeGeometry args={[6, 6]} />
-        <meshBasicMaterial
-          map={renderTargetBlue.texture}
-          side={DoubleSide}
+        <shaderMaterial
           transparent
+          key={uuidv4()}
+          vertexShader={vertexShader}
+          fragmentShader={fragmentShader}
+          uniforms={{
+            uTexture: { value: renderTargetBlue.texture },
+            winResolution: {
+              value: new THREE.Vector2(
+                window.innerWidth,
+                window.innerHeight
+              ).multiplyScalar(Math.min(window.devicePixelRatio, 2)),
+            },
+          }}
         />
-      </mesh> */}
+      </mesh>
       {/* {createPortal(<PortalScene />, portalScene)}
       <mesh frustumCulled={false} geometry={getFullscreenTriangle()}>
         <meshBasicMaterial
