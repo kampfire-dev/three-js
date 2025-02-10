@@ -13,7 +13,7 @@ export class SobelEdgeEffect extends Effect {
     emissiveIntensity = 0.9,
   } = {}) {
     super("SobelEdgeEffect", fragmentShader, {
-      uniforms: new Map([
+      uniforms: new Map<string, Uniform<Color | number>>([
         ["edgeColor", new Uniform(edgeColor)],
         ["emissiveColor", new Uniform(emissiveColor)],
         ["emissiveIntensity", new Uniform(emissiveIntensity)],
@@ -30,20 +30,7 @@ export class SobelEdgeEffect extends Effect {
   ) {}
 }
 
-export const SobelEdge = forwardRef((props: { layers?: number }, ref) => {
+export const SobelEdge = forwardRef((_, ref) => {
   const effect = useMemo(() => new SobelEdgeEffect(), []);
   return <primitive object={effect} ref={ref} />;
-
-  // const { camera } = useThree();
-
-  // const pass = useMemo(() => {
-  //   const targetCamera = camera.clone();
-  //   if (props.layers) {
-  //     targetCamera.layers.set(props.layers);
-  //   }
-  //   const pass = new EffectPass(targetCamera, new SobelEdgeEffect());
-  //   return pass;
-  // }, [camera, props]);
-
-  // return <primitive object={pass} ref={ref} />;
 });

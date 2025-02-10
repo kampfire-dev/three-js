@@ -9,8 +9,6 @@ import {
 import { BlendFunction, VignetteTechnique } from "postprocessing";
 import { Vector2 } from "three";
 import { LensDistortion } from "./lens-distortion";
-import { SobelEdge } from "./sobel-effect";
-import { RenderPass } from "./render-pass";
 
 export function PostEffects() {
   return (
